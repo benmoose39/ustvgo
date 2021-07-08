@@ -4,8 +4,8 @@
 name: Node.js Package
 
 on:
-  #schedule:
-  #  - cron: "0 0 * * *"
+  schedule:
+    - cron: '0 0 * * *'
   watch: 
     types: [started]
 
@@ -17,21 +17,20 @@ jobs:
     
     steps:
       - uses: actions/checkout@v2
-          
       - uses: actions/setup-node@v2
         with:
           node-version: 14
+      - name: config
+        run: |
+          git config --global user.email "add your github email here"
+          git config --global user.name "nomoney4me"
       - run: npm install
       
       - name: Fetch new data
         run: node index.js
       
       - name: Update files in ./output/
-        run: |
-          git add .
-          git commit -m "Updated epg/m3u" -a
-      
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+        uses: actions-js/push@master
         with:
+          message: Updated epg
           github_token: ${{ secrets.GITHUB_TOKEN }}
